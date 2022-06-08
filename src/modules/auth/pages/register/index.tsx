@@ -28,7 +28,7 @@ const index = () => {
 							fullWidth
 							autoComplete='email'
 							defaultValue=''
-							id='displayName'
+							id='display-name'
 							label='表示名'
 							margin='normal'
 							name='email'
@@ -59,7 +59,7 @@ const index = () => {
 							fullWidth
 							autoComplete='current-password'
 							defaultValue=''
-							id='passwordConfirmation'
+							id='password-confirmation'
 							label='確認用パスワード'
 							margin='normal'
 							name='password'
