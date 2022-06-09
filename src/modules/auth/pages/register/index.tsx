@@ -1,9 +1,10 @@
 import { AppBar, Stack, styled, Toolbar, Typography, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import Main from '../../components/main'
-import LoginForm from '../../components/FormContainer'
+import FormContainer from '../../components/FormContainer'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import client from "../../../../api/client"
 
 const Root = styled(Stack)({
 	height: '100vh',
@@ -20,13 +21,7 @@ const Index = () => {
 	const navigate = useNavigate();
 
 	const signup = () => {
-		console.log("sign button cliced");
-		console.log(displayName);
-		console.log(email);
-		console.log(password);
-		console.log(passwordConfirmation);
-		//追加
-		axios.post("http://35.77.103.51:8080/signup",
+		client.post("/signup",
 			{
 				user: {
 					display_name: displayName,
@@ -44,7 +39,6 @@ const Index = () => {
 		})
 	}
 
-
 	return (
 		<Root>
 			<AppBar color='primary' position='relative' sx={{ flexDirection: 'initial' }}>
@@ -55,7 +49,7 @@ const Index = () => {
 				</Toolbar>
 			</AppBar>
 			<Main>
-				<LoginForm>
+				<FormContainer>
 					<Stack spacing={2}>
 						<TextField
 							autoFocus
@@ -67,7 +61,6 @@ const Index = () => {
 							margin='normal'
 							name='display-name'
 							type='text'
-							// value='mikane'
 							onChange={event => setDisplayName(event.target.value)}
 						/>
 						<TextField
@@ -80,7 +73,6 @@ const Index = () => {
 							margin='normal'
 							name='email'
 							type='email'
-							// value='hogehoge@example.com'
 							onChange={event => setEmail(event.target.value)}
 						/>
 						<TextField
@@ -92,7 +84,6 @@ const Index = () => {
 							margin='normal'
 							name='password'
 							type='password'
-							// value='hogehoge1120'
 							onChange={event => setPassword(event.target.value)}
 						/>
 						<TextField
@@ -104,7 +95,6 @@ const Index = () => {
 							margin='normal'
 							name='password-confirmation'
 							type='password'
-							// value='hogehoge1120'
 							onChange={event => setPasswordConfirmation(event.target.value)}
 						/>
 						<Button
@@ -119,7 +109,7 @@ const Index = () => {
 						</Button>
 						<Typography color="primary" onClick={() => navigate('/login')} sx={{ textAlign: 'right' }}>{'ログインはこちら'}</Typography>
 					</Stack>
-				</LoginForm>
+				</FormContainer>
 			</Main>
 		</Root>
 	)
