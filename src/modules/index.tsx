@@ -1,43 +1,36 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux"
-import { selectUser, login, logout } from "../features/userSlice"
+import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Tasks from './tasks/pages'
 import Register from './auth/pages/register'
 import Login from './auth/pages/login'
+import PrivateRoute from '../api/PrivateRoute';
+import NotFound from '../NotFound';
+import { Navigate } from 'utils/Navigate';
+
+import { atom, useRecoilValue } from 'recoil';
+import { RecoilAtomKeys } from "api/RecoilKeys"
+
+const loginState = atom({
+	key: RecoilAtomKeys.LOGIN_STATE,
+	default: sessionStorage.getItem('loggedIn') === 'true' || false
+})
 
 const App = () => {
-	const user = useSelector(selectUser);
-	const dispatch = useDispatch();
-
-	// App component など、どのページを開いても必ず読み込まれるcomponent に現在ログイン中のuserをfetchするeffectを書く
-	useEffect(() => {
-		if ( /*path.to.curerentUser === undefined*/ true) {
-			// ログイン中のユーザーの情報をfetch する処理
-			// getMe();
-			dispatch(
-				// *ISSUE：axiosによるrequestで返却された値を下記に入れたい
-				login({
-					userId: "",
-					displayName: ""
-				})
-			);
-			// *ISSUE：クリーンアップ関数?は必要？
-		}
-		// ログイン中のユーザーの情報を格納するstateをdepsに入れておく
-		// それにより最初のマウント?時とstateに変化があった場合に呼び出される
-		// deps：依存配列のことで、useMemoやuseEffectの第二引数のことを指す
-		// 基本的に、useEffectの第２引数を空にすることはない
-	}, [ /*path.to.curerentUser*/]);
-
-	// *ISSUE：ログアウト時にStore/Slice(login)のstateを解放する処理をどこに書いたら良いのか？？
-
+	const loggedIn = useRecoilValue(loginState);
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path={`/login`} element={<Login />} />
-				<Route path={`/register/`} element={<Register />} />
-				<Route path={`/tasks/`} element={<Tasks />} />
+				<Route path={`/login`} element={loggedIn
+					? (<Navigate to="/tasks" />)
+					: (<Login />)} />
+				<Route path={`/register/`} element={loggedIn
+					? (<Navigate to="/tasks" />)
+					: (<Login />)}  />
+				<Route path={`/`} element={<PrivateRoute />}>
+					<Route path='/tasks' element={<Tasks />} />
+				</Route>
+				{/* <Route path={`/tasks/`} element={<Tasks />} /> */}
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
 	);
