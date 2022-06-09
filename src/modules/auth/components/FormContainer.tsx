@@ -8,10 +8,10 @@ type Props = {
 }
 
 const Root = styled(Paper)(({ }) => ({
-	padding: '24px',
-	width: '100%',
+	padding: 24,
+	// width: '100%',
 	maxWidth: 400,
-	minWidth: 300,
+	minWidth: 280,
 	alignItems: 'center',
 }))
 
